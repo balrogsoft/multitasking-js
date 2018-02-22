@@ -1,0 +1,72 @@
+<html>
+<title> Multithreading in js</title>
+<script src="Task.js" type="application/javascript"></script>
+<script src="fibonacci.js" type="application/javascript"></script>
+<script type="application/javascript">
+
+    // Preemptive multitasking example in javascript
+    // by Pedro Gil (Balrog Soft / amigaskool.net)
+    // balrogsoftware.com
+    // 
+    // This is a simple implementation using generators, 
+    // Task priorities start at value 1
+    
+    this.TaskList = new Array();
+    
+    // Simple Task Scheduler
+    var Scheduler = function() {
+        setInterval(function() {
+            var length = TaskList.length;
+            for(var i = 0; i < length; i++) {
+                if (TaskList[i]._fn) {
+                    var res = TaskList[i]._fn.next().done;
+                    if (res) {
+                        TaskList.splice(i, 1);
+                        length--; i--;
+                        break;
+                    }
+                }
+            }
+        } , 4); // <-- 4 ms is the minimum time slice for a task with priority 1
+    };
+    
+
+    function load()
+    {
+        var firstTask = new Task();
+        firstTask.SetTaskPri(8);
+        firstTask._debugLayer = document.getElementById("debug1");
+        
+        var secondTask = new Task();
+        secondTask.SetTaskPri(4);
+        secondTask._debugLayer = document.getElementById("debug2");
+        
+        var thirdTask = new Task();
+        thirdTask.SetTaskPri(2);
+        thirdTask._debugLayer = document.getElementById("debug3");
+        
+        var fouthTask = new Task();
+        fouthTask.SetTaskPri(1);
+        fouthTask._debugLayer = document.getElementById("debug4");
+        
+        TaskList.push(firstTask.addProc(fibonacci(firstTask)));
+        TaskList.push(secondTask.addProc(fibonacci(secondTask)));
+        TaskList.push(thirdTask.addProc(fibonacci(thirdTask)));
+        TaskList.push(fouthTask.addProc(fibonacci(fouthTask)));
+        
+        Scheduler();
+    }
+
+</script>
+
+<body>
+    <div id="msg" style="position:absolute;left:16px;top:0px;width:640px;height:16px">Some kind of preemptive multitasking in js using generators</div>
+    <div id="debug1" style="position:absolute;left:16px;top:16px;width:640px;height:16px"> </div>
+    <div id="debug2" style="position:absolute;left:16px;top:32px;width:640px;height:16px"> </div>
+    <div id="debug3" style="position:absolute;left:16px;top:48px;width:640px;height:16px"> </div>
+    <div id="debug4" style="position:absolute;left:16px;top:64px;width:640px;height:16px"> </div>
+    <script>
+        load();
+    </script>
+</body>
+</html>
