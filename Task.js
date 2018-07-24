@@ -9,17 +9,16 @@ function Task ()
     this._slice = 0;
     
     this._TaskSwitcher = null;
-
 	// private method
-	this._switcher = function*() {
-		while (true) {
-		    if ((new Date() - this._sliceStart) >= this._slice) {
-		        yield true;
-		        this._sliceStart = new Date();
-		    }  
-		    yield false;
-		}
-	};
+    this._switcher = function*() {
+        while (true) {
+            if ((new Date() - this._sliceStart) >= this._slice) {
+                yield true;
+                this._sliceStart = new Date();
+            }  
+            yield false;
+        }
+    };
 }
 
 Task.prototype.SetTaskPri = function(pri) {
