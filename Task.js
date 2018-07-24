@@ -9,6 +9,17 @@ function Task ()
     this._slice = 0;
     
     this._TaskSwitcher = null;
+
+	// private method
+	this._switcher = function*() {
+		while (true) {
+		    if ((new Date() - this._sliceStart) >= this._slice) {
+		        yield true;
+		        this._sliceStart = new Date();
+		    }  
+		    yield false;
+		}
+	};
 }
 
 Task.prototype.SetTaskPri = function(pri) {
@@ -27,16 +38,5 @@ Task.prototype.addProc = function(proc) {
 // Return true when a task must sleep
 Task.prototype.Switch = function() {
     return this._TaskSwitcher.next().value;
-};
-
-// private method
-Task.prototype._switcher = function*() {
-    while (true) {
-        if ((new Date() - this._sliceStart) >= this._slice) {
-            yield true;
-            this._sliceStart = new Date();
-        }  
-        yield false;
-    }
 };
 
